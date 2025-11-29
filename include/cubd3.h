@@ -8,11 +8,14 @@
 # include <fcntl.h>
 # include <limits.h>
 # include <stdbool.h>
-# include 
+# include "minilibx-linux/mlx.h"
+# include "minilibx-linux/mlx_int.h"
 
 # define READ_BUFFER 4096
 # define WIDTH 1000
 # define HEIGHT 1000
+# define MOVE_SPEED 0.5
+# define ROT_SPEED 0.03
 
 /* ---------- Types_parsing ---------- */
 
@@ -83,8 +86,6 @@ typedef struct s_player
     float   dirY;
     float   planeX;
     float   planeY;
-    float   move_speed;
-    float   rot_speed;
 } t_player;
 
 typedef struct s_textures_img
@@ -98,9 +99,16 @@ typedef struct s_textures_img
     int     endian;
 }   t_textures_img;
 
+typedef struct s_all_textures
+{
+    t_textures_img  north;
+    t_textures_img  south;
+    t_textures_img  west;
+    t_textures_img  east;
+} t_all_textures;
+
 typedef struct s_game
 {
-    t_player        player;
     void            *mlx;
     void            *win;
     void            *img;
@@ -109,7 +117,8 @@ typedef struct s_game
     int             line_len;
     int             endian;
     t_scene         scene;
-    t_textures      textures;
+    t_all_textures  textures;
+    t_player        player;
 }   t_game;
 
 /* ---------- Utils (src/utils/) ---------- */
@@ -188,5 +197,11 @@ int     validate_textures_exist(t_textures *tx);
 int           parse_scene(const char *path, t_scene *scene);
 void          set_parse_error(t_scene *scene, const char *msg);
 const char   *get_parse_error(const t_scene *scene);
+
+/* ---------- Orchestrator & errors (src/parse/) ---------- */
+int	init_mlx(t_game *game, char *title);
+void	put_pixel(t_game *game, int x, int y, int color);
+void	init_spawn_dir_and_pos(t_player *player, t_spawn *spawn);
+int	load_all_textures(t_game *game);
 
 #endif
