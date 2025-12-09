@@ -3,38 +3,38 @@
 
 int main(int argc, char **argv)
 {
-    t_scene scene;
-
+    t_game  game;
+    
     if (argc != 2)
     {
-        printf("Error\nUsage: %s <file.cub>\n", argv[0]);
+        printf("Usage: ./cub3D <map.cub>\n");
         return (1);
     }
-    if (!parse_scene(argv[1], &scene))
+    
+    if (!parse_scene(argv[1], &game.scene))
     {
-        printf("Error\n%s\n", get_parse_error(&scene));
-        cleanup_scene(&scene);
+        printf("Error\n%s\n", get_parse_error(&game.scene));
+        cleanup_scene(&game.scene);
         return (1);
     }
-
-/* --- Succès : logs utiles pendant le dev (peuvent être retirés) --- */
-      printf("OK: parsing passed\n");               /* NEW */
-      printf("OK spawn=(%d,%d,%c) rows=%d cols=%d\n",
-       scene.spawn.row, scene.spawn.col, scene.spawn.dir,
-       scene.map.rows, scene.map.cols);
-
-
-    /* Pour afficher la map rectangulaire pendant tes tests, décommente :
+    
+    printf("OK: parsing passed\n");
+    printf("OK spawn=(%d,%d,%c) rows=%d cols=%d\n",
+           game.scene.spawn.row, game.scene.spawn.col, game.scene.spawn.dir,
+           game.scene.map.rows, game.scene.map.cols);
+    
+    if (!init_game(&game))
     {
-        int r = 0;
-        while (r < scene.map.rows)
-        {
-            printf("%s\n", scene.map.lines_map[r]);
-            r++;
-        }
+        printf("Error\nFailed to initialize game\n");
+        cleanup_scene(&game.scene);
+        return (1);
     }
-    */
-
-    cleanup_scene(&scene);
+    draw_floor_ceiling(&game);
+    mlx_put_image_to_window(game.mlx, game.win, game.img, 0, 0);
+    mlx_loop(game.mlx);
+    
+    // (Jamais atteint avec mlx_loop)
+    cleanup_mlx(&game);
+    cleanup_scene(&game.scene);
     return (0);
 }

@@ -51,7 +51,7 @@ int	scan_map_for_spawn(t_scene *scene)
 		return (set_parse_error(scene, "Invalid map inputs"), 0);
 	sp.found = 0;
 	row = 0;
-	while (scene->map.lines_map[row])
+	while (row < scene->map.rows)
 	{
 		if (!process_line(scene->map.lines_map[row], row, &sp, scene))
 			return (0);

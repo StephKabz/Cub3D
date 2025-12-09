@@ -8,8 +8,9 @@
 # include <fcntl.h>
 # include <limits.h>
 # include <stdbool.h>
-# include "minilibx-linux/mlx.h"
-# include "minilibx-linux/mlx_int.h"
+# include <stdint.h>
+# include <mlx.h>
+# include <mlx_int.h>
 
 # define READ_BUFFER 4096
 # define WIDTH 1000
@@ -121,6 +122,23 @@ typedef struct s_game
     t_player        player;
 }   t_game;
 
+typedef struct s_ray
+{
+    double  ray_dir_x; //direction du rayon x
+    double  ray_dir_y; //direction du rayon x
+    int     map_x; // case x de la map
+    int     map_y; // case y de la map
+    double  side_dist_x; // disttance jusqu'au prochain cote de x
+    double  side_dist_y; // disttance jusqu'au prochain cote de y
+    double  delta_dist_x; // distance pour traverser 1 case en x
+    double  delta_dist_y; // distance pour traverser 1 case en y
+    int     step_x; // direction de step en x (+1 ou -1)
+    int     step_y; // direction de step en y (+1 ou -1)
+    int     hit; // variable si le mur est touche ou pas (1 ou 0)
+    int     side; // cote touche (0 = verticale, 1 = horizontal)
+    double  perp_dist_wall; // distance perpendiculaire au mur
+} t_ray;
+
 /* ---------- Utils (src/utils/) ---------- */
 char    *ft_strrchr(const char *s, int c);
 int     ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -151,16 +169,14 @@ int	reader_fail(t_file_reader *reader, const char *msg);
 int	reader_realloc(t_file_reader *reader, size_t new_capacity);
 int	reader_ensure_capacity(t_file_reader *reader, size_t need);
 void	reader_init(t_file_reader *reader, t_scene *scene);
-int	reader_append_buffer(t_file_reader *reader,
-								char *chunk_buf, ssize_t bytes_read);
+int	reader_append_buffer(t_file_reader *reader, char *chunk_buf, ssize_t bytes_read);
 
 /* file_split_utils.c: */
 void	free_partial(char **lines, size_t n);
 size_t	count_total_lines(const char *filebuf);
 char	**alloc_lines_array(size_t total_lines, t_scene *scene);
 char	*alloc_line(const char *filebuf, size_t start, size_t end);
-int	process_line_split(const char *filebuf, char **lines,
-				size_t *indexes, t_scene *scene);
+int	process_line_split(const char *filebuf, char **lines, size_t *indexes, t_scene *scene);
 
 /* map_parse_utils.c: */
 char	*dup_line(const char *s);
@@ -179,10 +195,8 @@ char  **split_lines(const char *filebuf, t_scene *scene);
 int     parse_headers(char **lines, int *out_map_start, t_scene *scene);
 int     match_texture_line(const char *line, const char *ident, char **out_path);
 int     match_color_line(const char *line, char id, t_color *out);
-int     match_and_set_texture(const char *line, const char *id,
-                              char **slot, int *seen_flag);
-int     match_and_set_color(const char *line, char id,
-                            t_color *slot, int *seen_flag);
+int     match_and_set_texture(const char *line, const char *id, char **slot, int *seen_flag);
+int     match_and_set_color(const char *line, char id, t_color *slot, int *seen_flag);
 
 /* ---------- Map parsing (src/parse/) ---------- */
 int     parse_map_block(char **lines, int map_start, t_map *out, t_scene *scene);
@@ -198,10 +212,14 @@ int           parse_scene(const char *path, t_scene *scene);
 void          set_parse_error(t_scene *scene, const char *msg);
 const char   *get_parse_error(const t_scene *scene);
 
-/* ---------- Orchestrator & errors (src/parse/) ---------- */
+/* ---------- Inittialisation / init_mlx ---------- */
 int	init_mlx(t_game *game, char *title);
 void	put_pixel(t_game *game, int x, int y, int color);
 void	init_spawn_dir_and_pos(t_player *player, t_spawn *spawn);
 int	load_all_textures(t_game *game);
+/* ---------- Inittialisation / init_game ---------- */
+int	init_game(t_game *game);
+void    cleanup_mlx(t_game *game);
 
+void	draw_floor_ceiling(t_game *game);
 #endif
