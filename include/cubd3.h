@@ -137,7 +137,7 @@ typedef struct s_ray
     int     hit; // variable si le mur est touche ou pas (1 ou 0)
     int     side; // cote touche (0 = verticale, 1 = horizontal)
     double  perp_dist_wall; // distance perpendiculaire au mur
-} t_ray;
+}   t_ray;
 
 /* ---------- Utils (src/utils/) ---------- */
 char    *ft_strrchr(const char *s, int c);
@@ -222,4 +222,5 @@ int	init_game(t_game *game);
 void    cleanup_mlx(t_game *game);
 
 void	draw_floor_ceiling(t_game *game);
+void	raycasting(t_game *game);
 #endif

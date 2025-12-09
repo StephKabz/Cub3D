@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         cleanup_scene(&game.scene);
         return (1);
     }
-    draw_floor_ceiling(&game);
+    raycasting(&game);
     mlx_put_image_to_window(game.mlx, game.win, game.img, 0, 0);
     mlx_loop(game.mlx);
     
