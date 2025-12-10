@@ -33,6 +33,8 @@ SRCS    := src/file/file_validation.c \
            src/execution/init_game.c \
            src/execution/draw_floor_ceiling.c \
            src/execution/raycasting.c \
+           src/execution/inputs_and_move.c \
+           src/execution/game_loop.c \
            src/main.c
 
 # Utiliser patsubst pour la transformation

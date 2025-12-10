@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 16:58:22 by kingstephan       #+#    #+#             */
-/*   Updated: 2025/12/02 16:36:44 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/10 13:19:21 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ void	init_spawn_dir_and_pos(t_player *player, t_spawn *spawn)
 	player->planeY = player->dirX * 0.66;
 }
 
-static int	load_texture(t_textures_img *textures, void *mlx, char *path)
+static int	load_texture(t_textures_img *texture, void *mlx, char *path)
 {
-	textures->img = mlx_xpm_file_to_image(mlx, path, &textures->width, &textures->height);
-	if (!textures->img)
+	texture->img = mlx_xpm_file_to_image(mlx, path, &texture->width, &texture->height);
+	if (!texture->img)
 		return (0);
-	textures->img_data = mlx_get_data_addr(textures->img, &textures->bpp, &textures->line_len, &textures->endian);
-	if (!textures->img_data)
+	texture->img_data = mlx_get_data_addr(texture->img, &texture->bpp, &texture->line_len, &texture->endian);
+	if (!texture->img_data)
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:25:10 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/09 19:43:07 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/09 19:44:00 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ static void	draw_wall_column(t_game *game, t_ray *ray, int x)
 		wallX = game->player.posY + ray->perp_dist_wall * ray->ray_dir_y;
 	else
 		wallX = game->player.posX + ray->perp_dist_wall * ray->ray_dir_x;
-	wallX -= floor(wallX);
+	wallX -= ft_floor(wallX);
 	if (ray->side == 0)
 	{
 		if (ray->ray_dir_x > 0)

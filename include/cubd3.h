@@ -9,14 +9,22 @@
 # include <limits.h>
 # include <stdbool.h>
 # include <stdint.h>
+# include <math.h>
 # include <mlx.h>
 # include <mlx_int.h>
 
 # define READ_BUFFER 4096
-# define WIDTH 1000
-# define HEIGHT 1000
-# define MOVE_SPEED 0.5
+# define WIDTH 1500
+# define HEIGHT 1500
+# define MOVE_SPEED 0.2
 # define ROT_SPEED 0.03
+# define KEY_W 119
+# define KEY_A 97
+# define KEY_S 115 
+# define KEY_D 100
+# define KEY_LEFT 65361
+# define KEY_RIGHT 65363
+# define KEY_ESC 65307
 
 /* ---------- Types_parsing ---------- */
 
@@ -108,20 +116,6 @@ typedef struct s_all_textures
     t_textures_img  east;
 } t_all_textures;
 
-typedef struct s_game
-{
-    void            *mlx;
-    void            *win;
-    void            *img;
-    char            *img_data;
-    int             bpp;
-    int             line_len;
-    int             endian;
-    t_scene         scene;
-    t_all_textures  textures;
-    t_player        player;
-}   t_game;
-
 typedef struct s_ray
 {
     double  ray_dir_x; //direction du rayon x
@@ -138,6 +132,33 @@ typedef struct s_ray
     int     side; // cote touche (0 = verticale, 1 = horizontal)
     double  perp_dist_wall; // distance perpendiculaire au mur
 }   t_ray;
+
+typedef struct s_keys
+{
+    int w;
+    int s;
+    int a;
+    int d;
+    int left;
+    int right;
+    int esc;
+}   t_keys;
+
+typedef struct s_game
+{
+    void            *mlx;
+    void            *win;
+    void            *img;
+    char            *img_data;
+    int             bpp;
+    int             line_len;
+    int             endian;
+    t_scene         scene;
+    t_all_textures  textures;
+    t_player        player;
+    t_keys          keys;
+}   t_game;
+
 
 /* ---------- Utils (src/utils/) ---------- */
 char    *ft_strrchr(const char *s, int c);
@@ -223,4 +244,13 @@ void    cleanup_mlx(t_game *game);
 
 void	draw_floor_ceiling(t_game *game);
 void	raycasting(t_game *game);
+
+/* ---------- movements and rotation ---------- */
+int	key_press(int keycode, void *param);
+int	key_release(int keycode, void *param);
+void	handle_movement(t_game *game);
+void	handle_rotation(t_game *game);
+/* ---------- game loop ---------- */
+int	game_loop(void *param);
+int	close_window(void *param);
 #endif
