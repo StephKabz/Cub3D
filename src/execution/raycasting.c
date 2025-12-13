@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 16:25:10 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/09 19:44:00 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 18:23:56 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,43 +28,54 @@ static double	ft_abs_double(double nb)
 	return (nb);
 }
 
+static double	calculate_delta_dist(double ray_dir)
+{
+	if (ray_dir == 0)
+		return 1e30;
+	return (ft_abs_double(1.0 / ray_dir));
+}
+
+static void	init_step_side_x(t_ray *ray, t_player *player)
+{
+	if (ray->ray_dir_x < 0)
+	{
+		ray->step_x = -1;
+		ray->side_dist_x = (player->pos_x - ray->map_x) * ray->delta_dist_x;
+	}
+	else
+	{
+		ray->step_x = 1;
+		ray->side_dist_x = (ray->map_x + 1.0 - player->pos_x) * ray->delta_dist_x;
+	}
+}
+
+static void	init_step_side_y(t_ray *ray, t_player *player)
+{
+	if (ray->ray_dir_y < 0)
+	{
+		ray->step_y = -1;
+		ray->side_dist_y = (player->pos_y - ray->map_y) * ray->delta_dist_y;
+	}
+	else
+	{
+		ray->step_y = 1;
+		ray->side_dist_y = (ray->map_y + 1.0 - player->pos_y) * ray->delta_dist_y;
+	}
+}
+
 static void	init_ray(t_ray *ray, t_player *player, int x)
 {
 	double	camera_x;
 
 	camera_x = 2.0 * x / WIDTH - 1.0;
-	ray->ray_dir_x = player->dirX + player->planeX * camera_x;
-	ray->ray_dir_y = player->dirY + player->planeY * camera_x;
-	ray->map_x = (int)player->posX;
-	ray->map_y = (int)player->posY;
-	if (ray->ray_dir_x == 0)
-		ray->delta_dist_x = 1e30;
-	else
-		ray->delta_dist_x = ft_abs_double(1.0 / ray->ray_dir_x);
-	if (ray->ray_dir_y == 0)
-		ray->delta_dist_y = 1e30;
-	else
-		ray->delta_dist_y = ft_abs_double(1.0 / ray->ray_dir_y);
-	if (ray->ray_dir_x < 0)
-	{
-		ray->step_x = -1;
-		ray->side_dist_x = (player->posX - ray->map_x) * ray->delta_dist_x;
-	}
-	else
-	{
-		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - player->posX) * ray->delta_dist_x;
-	}
-	if (ray->ray_dir_y < 0)
-	{
-		ray->step_y = -1;
-		ray->side_dist_y = (player->posY - ray->map_y) * ray->delta_dist_y;
-	}
-	else
-	{
-		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - player->posY) * ray->delta_dist_y;
-	}
+	ray->ray_dir_x = player->dir_x + player->plane_x * camera_x;
+	ray->ray_dir_y = player->dir_y + player->plane_y * camera_x;
+	ray->map_x = (int)player->pos_x;
+	ray->map_y = (int)player->pos_y;
+	ray->delta_dist_x = calculate_delta_dist(ray->ray_dir_x);
+	ray->delta_dist_y = calculate_delta_dist(ray->ray_dir_y);
+	init_step_side_x(ray, player);
+	init_step_side_y(ray, player);
 	ray->hit = 0;
 }
 
@@ -92,87 +103,123 @@ static void	do_DDA(t_ray *ray, t_map *map)
 static void	calculate_perp_dist(t_ray * ray, t_player *player)
 {
 	if (ray->side == 0)
-		ray->perp_dist_wall = (ray->map_x - player->posX + (1 - ray->step_x) / 2) / ray->ray_dir_x;
+		ray->perp_dist_wall = (ray->map_x - player->pos_x + (1 - ray->step_x) / 2) / ray->ray_dir_x;
 	else
-		ray->perp_dist_wall = (ray->map_y - player->posY + (1 - ray->step_y) / 2) / ray->ray_dir_y;
+		ray->perp_dist_wall = (ray->map_y - player->pos_y + (1 - ray->step_y) / 2) / ray->ray_dir_y;
 }
 
-static void	draw_wall_column(t_game *game, t_ray *ray, int x)
+static void	floor_ceiling_color(t_game *game, int *floor, int *ceiling)
 {
-	int				draw_start;
-	int				draw_end;
-	int				y;
-	int				ceiling_color;
-	int				floor_color;
-	int				color;
-	int				texX;
-	int				texY;
-	double			line_height;
-	double			wallX;
-	double			step;
-	double			tex_pos;
-	t_textures_img	*texture;
-	
-
-	floor_color = (game->scene.fc.floor.red << 16)
+	*floor = (game->scene.fc.floor.red << 16)
 				| (game->scene.fc.floor.green << 8)
 				| (game->scene.fc.floor.blue);
-	ceiling_color = (game->scene.fc.ceiling.red << 16)
+	*ceiling = (game->scene.fc.ceiling.red << 16)
 				| (game->scene.fc.ceiling.green << 8)
 				| (game->scene.fc.ceiling.blue);
-	line_height = (int)(HEIGHT / ray->perp_dist_wall);
-	draw_start = -line_height / 2 + HEIGHT / 2;
-	if (draw_start < 0)
-		draw_start = 0;
-	draw_end = line_height / 2 + HEIGHT / 2;
-	if (draw_end >= HEIGHT)
-		draw_end = HEIGHT - 1;
+}
+
+static void	wall_bounds(t_ray *ray, int *draw_start, int *draw_end, double *line_height)
+{
+	*line_height = (double)(HEIGHT / ray->perp_dist_wall);
+	*draw_start = (int)(-(*line_height) / 2 + HEIGHT / 2);
+	if (*draw_start < 0)
+		*draw_start = 0;
+	*draw_end = (int)((*line_height) / 2 + HEIGHT / 2);
+	if (*draw_end >= HEIGHT)
+		*draw_end = HEIGHT - 1;
+}
+
+static double	calculate_wall_x(t_game *game, t_ray *ray)
+{
+	double	wall_x;
 	if (ray->side == 0)
-		wallX = game->player.posY + ray->perp_dist_wall * ray->ray_dir_y;
+	{
+		wall_x = game->player.pos_y + ray->perp_dist_wall * ray->ray_dir_y;
+	}
 	else
-		wallX = game->player.posX + ray->perp_dist_wall * ray->ray_dir_x;
-	wallX -= ft_floor(wallX);
+		wall_x = game->player.pos_x + ray->perp_dist_wall * ray->ray_dir_x;
+	wall_x -= ft_floor(wall_x);
+	return (wall_x);
+}
+
+static t_textures_img *select_texture(t_game *game, t_ray *ray)
+{
 	if (ray->side == 0)
 	{
 		if (ray->ray_dir_x > 0)
-			texture = &game->textures.east;
+			return (&game->textures.east);
 		else
-			texture = &game->textures.west;
+			return (&game->textures.west);
 	}
 	else
 	{
 		if (ray->ray_dir_y > 0)
-			texture = &game->textures.south;
+			return (&game->textures.south);
 		else
-			texture = &game->textures.north;
+			return (&game->textures.north);
 	}
-	texX = (int)(wallX * (double)texture->width);
-	if (texX < 0)
-		texX = 0;
-	if (texX >= texture->width)
-		texX = texture->width - 1;
-	step = 1.0 * texture->height / line_height;
-	tex_pos = (draw_start - HEIGHT / 2 + line_height / 2) * step;
+}
+
+static t_tex_params init_tex_rendering(t_textures_img *texture, double wall_x, double line_height, int draw_start)
+{
+	t_tex_params	params;
+
+	params.tex_x = (int)(wall_x * (double)texture->width);
+	if (params.tex_x < 0)
+		params.tex_x = 0;
+	if (params.tex_x >= texture->width)
+		params.tex_x = texture->width - 1;
+	params.step = 1.0 * texture->height / line_height;
+	params.tex_pos = (draw_start - HEIGHT / 2 + line_height / 2) * params.step;
+	return (params);
+}
+
+
+static void	draw_column(t_game *game, int x, t_render_params *params)
+{
+	int		y;
+	int		tex_y;
+	int		color;
+	double	tex_pos;
+
+	tex_pos = params->tex.tex_pos;
 	y = 0;
-	while (y < HEIGHT)
+	while(y < HEIGHT)
 	{
-		if (y < draw_start)
-			put_pixel(game, x, y, ceiling_color);
-		else if (y >= draw_start && y < draw_end)
+		if (y < params->draw_start)
+			put_pixel(game,x, y, params->ceiling_color);
+		else if (y >= params->draw_start && y < params->draw_end)
 		{
-			texY = (int)tex_pos;
-			if (texY < 0)
-				texY = 0;
-			if (texY >= texture->height)
-				texY = texture->height - 1;
-			color = *(int *)(texture->img_data + texY * texture->line_len + texX * (texture->bpp / 8));
+			tex_y = (int)tex_pos;
+			if (tex_y < 0)
+				tex_y = 0;
+			if (tex_y >= params->texture->height)
+				tex_y = params->texture->height - 1;
+			color = *(int *)(params->texture->img_data
+					+ tex_y * params->texture->line_len
+					+ params->tex.tex_x * (params->texture->bpp / 8));
 			put_pixel(game, x, y, color);
-			tex_pos += step;
+			tex_pos += params->tex.step;
 		}
 		else
-			put_pixel(game, x, y, floor_color);
+			put_pixel(game, x, y, params->floor_color);
 		y++;
 	}
+}
+
+static void draw_wall_column(t_game *game, t_ray *ray, int x)
+{
+    t_render_params	params;
+    double			wallX;
+    double			line_height;
+    
+	floor_ceiling_color(game, &params.floor_color, &params.ceiling_color);
+	wall_bounds(ray, &params.draw_start, &params.draw_end, &line_height);
+	wallX = calculate_wall_x(game, ray);
+	params.texture = select_texture(game, ray);
+	params.tex = init_tex_rendering(params.texture, wallX,
+										line_height, params.draw_start);
+	draw_column(game, x, &params);
 }
 
 void	raycasting(t_game *game)

@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 16:58:22 by kingstephan       #+#    #+#             */
-/*   Updated: 2025/12/10 13:19:21 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:52:32 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	init_mlx(t_game *game, char *title)
 
 void	put_pixel(t_game *game, int x, int y, int color)
 {
-	int offset;
+	int	offset;
 
 	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 		return ;
@@ -43,28 +43,28 @@ void	init_spawn_dir_and_pos(t_player *player, t_spawn *spawn)
 {
 	if (spawn->dir == 'N')
 	{
-		player->dirX = 0;
-		player->dirY = -1;
+		player->dir_x = 0;
+		player->dir_y = -1;
 	}
 	else if (spawn->dir == 'S')
 	{
-		player->dirX = 0;
-		player->dirY = 1;
+		player->dir_x = 0;
+		player->dir_y = 1;
 	}
 	else if (spawn->dir == 'E')
 	{
-		player->dirX = 1;
-		player->dirY = 0;
+		player->dir_x = 1;
+		player->dir_y = 0;
 	}
 	else if (spawn->dir == 'W')
 	{
-		player->dirX = -1;
-		player->dirY = 0;
+		player->dir_x = -1;
+		player->dir_y = 0;
 	}
-	player->posX = spawn->col + 0.5;
-	player->posY = spawn->row + 0.5;
-	player->planeX = -player->dirY * 0.66;
-	player->planeY = player->dirX * 0.66;
+	player->pos_x = spawn->col + 0.5;
+	player->pos_y = spawn->row + 0.5;
+	player->plane_x = -player->dir_y * 0.66;
+	player->plane_y = player->dir_x * 0.66;
 }
 
 static int	load_texture(t_textures_img *texture, void *mlx, char *path)

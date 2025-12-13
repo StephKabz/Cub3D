@@ -33,6 +33,7 @@ SRCS    := src/file/file_validation.c \
            src/execution/init_game.c \
            src/execution/draw_floor_ceiling.c \
            src/execution/raycasting.c \
+           src/execution/moves.c \
            src/execution/inputs_and_move.c \
            src/execution/game_loop.c \
            src/main.c

@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 14:41:15 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/10 16:27:18 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 16:37:19 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,75 +58,40 @@ int	key_release(int keycode, void *param)
 
 void	handle_movement(t_game *game)
 {
-	float	newX;
-	float	newY;
-
 	if (game->keys.w == 1)
-	{
-		newX = game->player.posX + game->player.dirX * MOVE_SPEED;
-		newY = game->player.posY + game->player.dirY * MOVE_SPEED;
-		if (game->scene.map.lines_map[(int)newY][(int)newX] != '1')
-		{
-			game->player.posX = newX;
-			game->player.posY = newY;
-		}
-	}
+		move_forward(game);
 	if (game->keys.s == 1)
-	{
-		newX = game->player.posX - game->player.dirX * MOVE_SPEED;
-		newY = game->player.posY - game->player.dirY * MOVE_SPEED;
-		if (game->scene.map.lines_map[(int)newY][(int)newX] != '1')
-		{
-			game->player.posX = newX;
-			game->player.posY = newY;
-		}
-	}
-	if (game->keys.a == 1)
-	{
-		newX = game->player.posX - game->player.dirY * MOVE_SPEED;
-		newY = game->player.posY + game->player.dirX * MOVE_SPEED;
-		if (game->scene.map.lines_map[(int)newY][(int)newX] != '1')
-		{
-			game->player.posX = newX;
-			game->player.posY = newY;
-		}
-	}
+		move_backward(game);
 	if (game->keys.d == 1)
-	{
-		newX = game->player.posX + game->player.dirY * MOVE_SPEED;
-		newY = game->player.posY - game->player.dirX * MOVE_SPEED;
-		if (game->scene.map.lines_map[(int)newY][(int)newX] != '1')
-		{
-			game->player.posX = newX;
-			game->player.posY = newY;
-		}
-	}
+		move_right(game);
+	if (game->keys.a == 1)
+		move_left(game);
 }
 
 void	handle_rotation(t_game *game)
 {
-	float	oldDirX;
-	float	oldPlaneX;
+	float	oldDir_x;
+	float	oldPlane_x;
 	float	angle;
 
 	if (game->keys.left == 1)
 	{
 		angle = -ROT_SPEED;
-		oldDirX = game->player.dirX;
-		game->player.dirX = oldDirX * cos(angle) - game->player.dirY * sin(angle);
-		game->player.dirY = oldDirX * sin(angle) + game->player.dirY * cos(angle);
-		oldPlaneX = game->player.planeX;
-		game->player.planeX = oldPlaneX * cos(angle) - game->player.planeY * sin(angle);
-		game->player.planeY = oldPlaneX * sin(angle) + game->player.planeY * cos(angle);
+		oldDir_x = game->player.dir_x;
+		game->player.dir_x = oldDir_x * cos(angle) - game->player.dir_y * sin(angle);
+		game->player.dir_y = oldDir_x * sin(angle) + game->player.dir_y * cos(angle);
+		oldPlane_x = game->player.plane_x;
+		game->player.plane_x = oldPlane_x * cos(angle) - game->player.plane_y * sin(angle);
+		game->player.plane_y = oldPlane_x * sin(angle) + game->player.plane_y * cos(angle);
 	}
 	if (game->keys.right == 1)
 	{
 		angle = ROT_SPEED;
-		oldDirX = game->player.dirX;
-		game->player.dirX = oldDirX * cos(angle) - game->player.dirY * sin(angle);
-		game->player.dirY = oldDirX * sin(angle) + game->player.dirY * cos(angle);
-		oldPlaneX = game->player.planeX;
-		game->player.planeX = oldPlaneX * cos(angle) - game->player.planeY * sin(angle);
-		game->player.planeY = oldPlaneX * sin(angle) + game->player.planeY * cos(angle);
+		oldDir_x = game->player.dir_x;
+		game->player.dir_x = oldDir_x * cos(angle) - game->player.dir_y * sin(angle);
+		game->player.dir_y = oldDir_x * sin(angle) + game->player.dir_y * cos(angle);
+		oldPlane_x = game->player.plane_x;
+		game->player.plane_x = oldPlane_x * cos(angle) - game->player.plane_y * sin(angle);
+		game->player.plane_y = oldPlane_x * sin(angle) + game->player.plane_y * cos(angle);
 	}
 }
