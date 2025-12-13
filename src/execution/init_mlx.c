@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 16:58:22 by kingstephan       #+#    #+#             */
-/*   Updated: 2025/12/13 16:52:32 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:33:13 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	init_mlx(t_game *game, char *title)
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	if (!game->img)
 		return (0);
-	game->img_data = mlx_get_data_addr(game->img, &game->bpp, &game->line_len, &game->endian);
+	game->img_data = mlx_get_data_addr(game->img, &game->bpp,
+			&game->line_len, &game->endian);
 	if (!game->img_data)
 		return (0);
 	return (1);
@@ -69,10 +70,12 @@ void	init_spawn_dir_and_pos(t_player *player, t_spawn *spawn)
 
 static int	load_texture(t_textures_img *texture, void *mlx, char *path)
 {
-	texture->img = mlx_xpm_file_to_image(mlx, path, &texture->width, &texture->height);
+	texture->img = mlx_xpm_file_to_image(mlx, path, &texture->width,
+			&texture->height);
 	if (!texture->img)
 		return (0);
-	texture->img_data = mlx_get_data_addr(texture->img, &texture->bpp, &texture->line_len, &texture->endian);
+	texture->img_data = mlx_get_data_addr(texture->img, &texture->bpp,
+			&texture->line_len, &texture->endian);
 	if (!texture->img_data)
 		return (0);
 	return (1);
@@ -94,5 +97,3 @@ int	load_all_textures(t_game *game)
 		return (0);
 	return (1);
 }
-
-

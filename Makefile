@@ -31,7 +31,6 @@ SRCS    := src/file/file_validation.c \
            src/utils/map_parse_utils.c \
            src/execution/init_mlx.c \
            src/execution/init_game.c \
-           src/execution/draw_floor_ceiling.c \
            src/execution/raycasting_utils.c \
            src/execution/raycasting_utils1.c \
            src/execution/raycasting_utils2.c \

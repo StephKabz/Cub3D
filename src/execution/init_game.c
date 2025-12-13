@@ -6,12 +6,11 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 20:05:44 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/02 19:18:06 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:33:31 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cubd3.h"
-
 
 void	cleanup_mlx(t_game *game)
 {

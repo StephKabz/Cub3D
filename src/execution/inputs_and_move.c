@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 14:41:15 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/13 16:37:19 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 20:33:35 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,28 +70,28 @@ void	handle_movement(t_game *game)
 
 void	handle_rotation(t_game *game)
 {
-	float	oldDir_x;
-	float	oldPlane_x;
+	float	old_dir_x;
+	float	old_plane_x;
 	float	angle;
 
 	if (game->keys.left == 1)
 	{
 		angle = -ROT_SPEED;
-		oldDir_x = game->player.dir_x;
-		game->player.dir_x = oldDir_x * cos(angle) - game->player.dir_y * sin(angle);
-		game->player.dir_y = oldDir_x * sin(angle) + game->player.dir_y * cos(angle);
-		oldPlane_x = game->player.plane_x;
-		game->player.plane_x = oldPlane_x * cos(angle) - game->player.plane_y * sin(angle);
-		game->player.plane_y = oldPlane_x * sin(angle) + game->player.plane_y * cos(angle);
+		old_dir_x = game->player.dir_x;
+		game->player.dir_x = old_dir_x * cos(angle) - game->player.dir_y * sin(angle);
+		game->player.dir_y = old_dir_x * sin(angle) + game->player.dir_y * cos(angle);
+		old_plane_x = game->player.plane_x;
+		game->player.plane_x = old_plane_x * cos(angle) - game->player.plane_y * sin(angle);
+		game->player.plane_y = old_plane_x * sin(angle) + game->player.plane_y * cos(angle);
 	}
 	if (game->keys.right == 1)
 	{
 		angle = ROT_SPEED;
-		oldDir_x = game->player.dir_x;
-		game->player.dir_x = oldDir_x * cos(angle) - game->player.dir_y * sin(angle);
-		game->player.dir_y = oldDir_x * sin(angle) + game->player.dir_y * cos(angle);
-		oldPlane_x = game->player.plane_x;
-		game->player.plane_x = oldPlane_x * cos(angle) - game->player.plane_y * sin(angle);
-		game->player.plane_y = oldPlane_x * sin(angle) + game->player.plane_y * cos(angle);
+		old_dir_x = game->player.dir_x;
+		game->player.dir_x = old_dir_x * cos(angle) - game->player.dir_y * sin(angle);
+		game->player.dir_y = old_dir_x * sin(angle) + game->player.dir_y * cos(angle);
+		old_plane_x = game->player.plane_x;
+		game->player.plane_x = old_plane_x * cos(angle) - game->player.plane_y * sin(angle);
+		game->player.plane_y = old_plane_x * sin(angle) + game->player.plane_y * cos(angle);
 	}
 }

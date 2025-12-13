@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 19:05:35 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/13 19:15:26 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:28:45 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static double	calculate_delta_dist(double ray_dir)
 {
 	if (ray_dir == 0)
-		return 1e30;
+		return (1e30);
 	return (ft_abs_double(1.0 / ray_dir));
 }
 
@@ -29,7 +29,8 @@ static void	init_step_side_x(t_ray *ray, t_player *player)
 	else
 	{
 		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - player->pos_x) * ray->delta_dist_x;
+		ray->side_dist_x = (ray->map_x + 1.0 - player->pos_x)
+			* ray->delta_dist_x;
 	}
 }
 
@@ -43,7 +44,8 @@ static void	init_step_side_y(t_ray *ray, t_player *player)
 	else
 	{
 		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - player->pos_y) * ray->delta_dist_y;
+		ray->side_dist_y = (ray->map_y + 1.0 - player->pos_y)
+			* ray->delta_dist_y;
 	}
 }
 
@@ -62,5 +64,3 @@ void	init_ray(t_ray *ray, t_player *player, int x)
 	init_step_side_y(ray, player);
 	ray->hit = 0;
 }
-
-
