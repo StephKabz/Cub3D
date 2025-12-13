@@ -6,7 +6,7 @@
 /*   By: stkabang <stkabang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 16:28:31 by stkabang          #+#    #+#             */
-/*   Updated: 2025/12/13 18:02:43 by stkabang         ###   ########.fr       */
+/*   Updated: 2025/12/13 19:19:54 by stkabang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,4 +288,17 @@ void		move_forward(t_game *game);
 void		move_backward(t_game *game);
 void		move_right(t_game *game);
 void		move_left(t_game *game);
+/* ---------- raycasting_utils ---------- */
+double		ft_floor(double nb);
+double		ft_abs_double(double nb);
+/* ---------- raycasting_utils1 ---------- */
+void		init_ray(t_ray *ray, t_player *player, int x);
+/* ---------- raycasting_utils2 ---------- */
+void		do_DDA(t_ray *ray, t_map *map);
+void		calculate_perp_dist(t_ray * ray, t_player *player);
+void		floor_ceiling_color(t_game *game, int *floor, int *ceiling);
+void		wall_bounds(t_ray *ray, int *draw_start, int *draw_end, double *line_height);
+double		calculate_wall_x(t_game *game, t_ray *ray);
+/* ---------- raycasting ---------- */
+void		raycasting(t_game *game);
 #endif

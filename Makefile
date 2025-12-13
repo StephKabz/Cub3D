@@ -32,6 +32,9 @@ SRCS    := src/file/file_validation.c \
            src/execution/init_mlx.c \
            src/execution/init_game.c \
            src/execution/draw_floor_ceiling.c \
+           src/execution/raycasting_utils.c \
+           src/execution/raycasting_utils1.c \
+           src/execution/raycasting_utils2.c \
            src/execution/raycasting.c \
            src/execution/moves.c \
            src/execution/inputs_and_move.c \
